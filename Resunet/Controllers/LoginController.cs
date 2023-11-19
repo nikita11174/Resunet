@@ -2,6 +2,7 @@
 using Resunet.BL.Auth;
 using Resunet.ViewMapper;
 using Resunet.ViewModels;
+using System.Net;
 
 namespace Resunet.Controllers
 {
@@ -27,8 +28,15 @@ namespace Resunet.Controllers
         {
             if (ModelState.IsValid)
             {
-                await authBl.Authenticate(model.Email!, model.Password!, model.RememberMe == true);
-                return Redirect("/");
+                try
+                {
+                    await authBl.Authenticate(model.Email!, model.Password!, model.RememberMe == true);
+                    return Redirect("/");
+                }
+                catch (Resunet.BL.AuthorizationException ex)
+                {
+                    ModelState.AddModelError("Email", "Имя или Email неверные");
+                }
             }
 
             return View("Index", model);

@@ -36,18 +36,18 @@ namespace Resunet.BL.Auth
         public async Task<int> Authenticate(string email, string password, bool rememberMe)
         {
             var user = await authDal.GetUser(email);
-            if (user.Password == encrypt.HashPassword(password, user.Salt))
+            if (user.UserId != null && user.Password == encrypt.HashPassword(password, user.Salt))
             {
                 Login(user.UserId ?? 0);
                 return user.UserId ?? 0;
             }
-            return 0;
+            throw new AuthorizationException();
         }
 
         public async Task<ValidationResult?> ValidateEmail(string email)
         {
             var user = await authDal.GetUser(email);
-            if(user.UserId != null)
+            if (user.UserId != null)
             {
                 return new ValidationResult("Email уже существует");
             }
