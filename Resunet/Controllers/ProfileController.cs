@@ -17,27 +17,29 @@ namespace Resunet.Controllers
         [Route("/profile")]
         public async Task<IActionResult> IndexSave()
         {
-            //if(ModelState.IsValid())
+            //  if (ModelState.IsValid())
             string filename = "";
-            var image = Request.Form.Files[0];
-            if (image != null)
+            var imageData = Request.Form.Files[0];
+            if (imageData != null)
             {
-                MD5 md5hhash = MD5.Create();
-                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(image.FileName);
-                byte[] hashBytes = md5hhash.ComputeHash(inputBytes);
+                MD5 md5hash = MD5.Create();
+                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(imageData.FileName);
+                byte[] hashBytes = md5hash.ComputeHash(inputBytes);
 
                 string hash = Convert.ToHexString(hashBytes);
 
-                var dir = "./wwwroot/images/" + hash.Substring(0, 2) + "/" + hash.Substring(0, 4);
+                var dir = "./wwwroot/images/" + hash.Substring(0, 2) + "/" +
+                       hash.Substring(0, 4);
                 if (!Directory.Exists(dir))
                     Directory.CreateDirectory(dir);
-                filename = dir + "/" + image.FileName;
 
+                filename = dir + "/" + imageData.FileName;
                 using (var stream = System.IO.File.Create(filename))
-                    await image.CopyToAsync(stream);
-
+                    await imageData.CopyToAsync(stream);
             }
+
             return View("Index", new ProfileViewModel());
         }
     }
 }
+

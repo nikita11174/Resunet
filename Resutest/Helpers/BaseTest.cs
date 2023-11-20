@@ -6,16 +6,17 @@ namespace Resutest.Helpers
 {
     public class BaseTest
     {
-        protected readonly IAuthDAL authDal = new AuthDAL();
-        protected readonly IEncrypt encrypt = new Encrypt();
-        protected readonly IHttpContextAccessor httpContextAccessor = new HttpContextAccessor();
+        protected IAuthDAL authDal = new AuthDAL();
+        protected IEncrypt encrypt = new Encrypt();
+        protected IHttpContextAccessor httpContextAccessor = new HttpContextAccessor();
         protected IAuthBL authBL;
+        protected IDbSessionDAL dbSessionDAL = new DbSessionDAL();
+        protected IDbSession dbSession;
 
         public BaseTest()
         {
-            authBL = new AuthBL(authDal, encrypt, httpContextAccessor);
-
-            
+            dbSession = new DbSession(dbSessionDAL, httpContextAccessor);
+            authBL = new AuthBL(authDal, encrypt, httpContextAccessor, dbSession);
         }
     }
 }

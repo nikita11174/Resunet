@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Resunet.BL.Auth;
-using Resunet.ViewMapper;
 using Resunet.ViewModels;
-using System.Net;
+
+// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Resunet.Controllers
 {
@@ -24,7 +24,7 @@ namespace Resunet.Controllers
 
         [HttpPost]
         [Route("/login")]
-        public async Task <IActionResult> IndexSave(LoginViewModel model)
+        public async Task<IActionResult> IndexSave(LoginViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -33,7 +33,7 @@ namespace Resunet.Controllers
                     await authBl.Authenticate(model.Email!, model.Password!, model.RememberMe == true);
                     return Redirect("/");
                 }
-                catch (Resunet.BL.AuthorizationException ex)
+                catch (Resunet.BL.AuthorizationException)
                 {
                     ModelState.AddModelError("Email", "Имя или Email неверные");
                 }
@@ -43,3 +43,4 @@ namespace Resunet.Controllers
         }
     }
 }
+
